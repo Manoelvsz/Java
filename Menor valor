@@ -1,0 +1,20 @@
+package AulaJava;
+
+import java.util.Scanner;
+
+public class Menorvalor {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int numero, menor;
+		System.out.println("Informe o primeiro número: ");
+		menor = sc.nextInt();
+		do {
+			System.out.println("Informe outro número ou 0 para sair: ");
+			numero = sc.nextInt();
+			if ((numero < menor) && (numero != 0)) {
+				menor = numero;
+			}
+		} while (numero != 0);
+		System.out.println("O menor número é "+menor);
+	}
+}
