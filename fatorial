@@ -1,0 +1,22 @@
+package AulaJava;
+
+import java.util.Scanner;
+
+public class fatorial {
+
+
+
+public static void main(String[] args) {
+	Scanner sc = new Scanner(System.in);
+	int numero, fat;
+	System.out.println("Informe o número para calcular o fatorial: ");
+	fat = sc.nextInt();
+	numero = fat - 1;
+	while(numero > 1) {
+		fat = fat * numero;
+		numero--;
+	}
+	System.out.println("O fatorial é = "+fat);
+}
+
+}
