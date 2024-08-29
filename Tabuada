@@ -1,0 +1,25 @@
+package AulaJava;
+
+import java.util.Scanner;
+
+public class Tabuada {
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+
+		int n;
+		int r;
+		n= sc.nextInt();
+		
+		for (int cont= 0; cont <=10; cont++) {
+			
+			r = n * cont;
+			
+			System.out.println(n + "X"+ cont+ "= "+ r);
+		}
+		
+		
+		
+		
+	}
+}
