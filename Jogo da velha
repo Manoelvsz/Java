@@ -1,1 +1,100 @@
+Projeto criado por:
+Alanna Machado, Kauã Rizzo, Manoel Vitor, Maria Luisa Cunha
+=====================================================================
 
+package Matrizes;
+
+import java.util.Scanner;
+
+public class OutroTrabalhoJogo {
+		
+    public static void main(String[] args) {
+    	Scanner sc = new Scanner(System.in);
+        char[][] tabuleiro = new char[3][3];
+        char jogador = 'X';
+        int linha, coluna, vencedor = -1;//não existe ainda.
+        boolean jogo = true;
+        boolean cheio = true;
+        
+        for (int i = 0; i < 3; i++) {//montar o tabuleiro. 
+            for (int j = 0; j < 3; j++) {
+                tabuleiro[i][j] = '-';
+            }
+        }
+        
+        do {
+            for (int i = 0; i < 3; i++) {//mostrar o tabuleiro.
+                for (int j = 0; j < 3; j++) {
+                    System.out.print(tabuleiro[i][j] + " ");
+                }
+                System.out.println();
+            }
+            
+      
+     
+            do {
+                System.out.println(jogador + ", insira a linha e a coluna que você quer jogar:");
+                linha = sc.nextInt();
+                coluna = sc.nextInt();
+                if (linha >= 0 && linha < 3 && coluna >= 0 && coluna < 3 && tabuleiro[linha][coluna] == '-') {
+                    tabuleiro[linha][coluna] = jogador;
+                    break;
+                } else {
+                    System.out.println("Não pode aí. Escolha outra posição.");
+                }
+            }while (jogo == true);
+            
+            
+            for (int i = 0; i < 3; i++) {//ver se ganhou na linha.
+                if (tabuleiro[i][0] == jogador && tabuleiro[i][1] == jogador && tabuleiro[i][2] == jogador) {
+                    vencedor = 1;
+                }
+            }
+            for (int j = 0; j < 3; j++) {//ver se ganhou na coluna.
+                if (tabuleiro[0][j] == jogador && tabuleiro[1][j] == jogador && tabuleiro[2][j] == jogador) {
+                    vencedor = 1;
+                }
+            }
+            if ((tabuleiro[0][0] == jogador && tabuleiro[1][1] == jogador && tabuleiro[2][2] == jogador) || 
+            		(tabuleiro[0][2] == jogador && tabuleiro[1][1] == jogador && tabuleiro[2][0] == jogador)) {
+                vencedor = 1;
+            }//ver as diagonais.
+            
+            if (vencedor > -1) {
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        System.out.print(tabuleiro[i][j] + " ");
+                    }
+                    System.out.println();
+                }
+                System.out.println(jogador +" GANHOU, PARABÉNS VEY!");
+                break;
+            }
+            
+            for (int i = 0; i < 3; i++) {//verificar se ainda tem espaços vazios.
+                for (int j = 0; j < 3; j++) {
+                    if (tabuleiro[i][j] == '-') {
+                        cheio = false;
+                    }
+                }
+            }
+            
+            if (cheio) {//ver se deu velha.
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        System.out.print(tabuleiro[i][j] + " ");
+                    }
+                    System.out.println();
+                }
+                System.out.println("IIIIHHHHH, Deu velha!");
+                break;
+            }
+            
+            if (jogador == 'X') {
+				jogador = 'O';
+			} else {
+				jogador = 'X';
+			}
+        }while (jogo == true);
+    }
+}
