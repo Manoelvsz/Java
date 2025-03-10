@@ -1,0 +1,114 @@
+
+Parte 1 -
+
+package prova;
+
+public class ContaUsuario {
+	
+	private int idUsuario;
+	private String	nome;
+	private int numLivrosEmprestados;
+	
+	public ContaUsuario(int idUsuario, String nome, int numLivrosEmprestados) {
+		this.idUsuario = idUsuario;
+		this.nome = nome;
+		this.numLivrosEmprestados = numLivrosEmprestados;
+	}
+
+	public int getIdUsuario() {
+		return idUsuario;
+	}
+
+	public void setIdUsuario(int idUsuario) {
+		this.idUsuario = idUsuario;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public int getNumLivrosEmprestados() {
+		return numLivrosEmprestados;
+	}
+
+	public void setNumLivrosEmprestados(int numLivrosEmprestados) {
+		this.numLivrosEmprestados = numLivrosEmprestados;
+	}
+	
+	public int emprestarLivro(int quantidade){
+		return this.numLivrosEmprestados += quantidade;
+	}
+	
+	public int devolverLivro(int quantidade) {
+		return this.numLivrosEmprestados -= quantidade;
+	}
+
+	public int exibirLivrosEmprestados() {
+		return numLivrosEmprestados;
+	}
+	@Override
+	public String toString() {
+		return "Usuario = "+ idUsuario+ " Nome = "+nome+ " Livros Emprestado= " +exibirLivrosEmprestados();
+	}
+	
+	
+	
+
+}
+
+
+Parte 2 -
+
+package principal;
+import java.util.Scanner;
+
+import prova.ContaUsuario;
+
+public class Main {
+
+	public static void main(String[] args) {
+	Scanner sc = new Scanner (System.in);
+	ContaUsuario emprestimo;
+	
+	String nome;
+	int ID, emprestado, quantidade;
+	int reduzir;
+	
+	System.out.println("Digite o ID do usuário: ");
+	ID = sc.nextInt();
+	sc.nextLine();
+	System.out.println("Digite o nome do usuário: ");
+	nome =sc.nextLine();
+	System.out.println("Digite o número de livros emprestados atualmente: ");
+	emprestado = sc.nextInt();
+	
+	System.out.println("Digite a quantidade de livros a serem emprestados: ");
+	quantidade = sc.nextInt();
+	System.out.println("Empréstimo de "+quantidade+ " livros realizado com sucesso.");
+	
+	emprestimo = new ContaUsuario(ID, nome, emprestado);
+	
+	emprestimo.emprestarLivro(quantidade);
+	
+	System.out.println(emprestimo);
+
+	do {
+	System.out.println("Digite a quantidade de livros a serem devolvidos: ");
+	reduzir = sc.nextInt();
+	}while(reduzir > emprestimo.exibirLivrosEmprestados());
+	
+	System.out.println("Devolução de "+reduzir+" livro realizada com sucesso.");
+	
+	emprestimo.devolverLivro(reduzir);
+	
+	System.out.println(emprestimo);
+	
+	
+	}
+
+}
+
