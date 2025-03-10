@@ -1,0 +1,355 @@
+CÓDIGO ACADEMIA:
+
+// O programa permite cadastrar, buscar, listar, alterar plano e excluir alunos e professores em uma academia.
+// Utiliza conceitos de orientação a objetos como interface, herança e polimorfismo, com várias classes para representar o sistema.
+
+package trabalho;
+
+import java.time.LocalDate; // Importa classe para trabalhar com datas.
+import java.time.format.DateTimeFormatter; // Importa classe para formatar datas.
+import java.time.format.DateTimeParseException; // Importa exceção para capturar erros de formatação de data.
+import java.util.ArrayList; // Importa classe de lista para armazenar objetos.
+import java.util.Scanner; // Importa classe para ler entrada do usuário.
+
+// A classe Programa contém o método principal para executar o sistema.
+public class Programa {
+
+	// O método main controla o fluxo de execução do programa e apresenta o menu de opções.
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in); // Cria objeto Scanner para ler a entrada do usuário.
+		int opc; // Variável para armazenar a opção escolhida no menu.
+		LocalDate data = null; // Variável para armazenar a data de nascimento de um aluno.
+		DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy"); // Formato de data no padrão "dd-MM-yyyy".
+		ArrayList<Pessoa> lista = new ArrayList<>(); // Lista para armazenar objetos do tipo Pessoa.
+
+		// Laço principal para exibir o menu e realizar as operações até que o usuário escolha sair.
+		do {
+			boolean validacao = false; // Variável auxiliar para validação de entrada.
+			// Exibe o menu de opções para o usuário.
+			System.out.println(
+					"Selecione uma opção: \n 1)Cadastrar aluno | 2)Buscar aluno | 3)Listar alunos | 4)Alterar plano do aluno | 5)Excluir aluno | 6)Sair");
+			opc = sc.nextInt(); // Lê a opção escolhida pelo usuário.
+
+			// Estrutura switch para executar ações com base na opção escolhida.
+			switch (opc) {
+			case 1:
+				// Caso 1: Cadastrar novo aluno.
+				System.out.println(
+						"Selecione o plano mensal: \n1)Plano Light - R$ 79,90 | 2)Plano Premium - R$ 99,90 | 3)Plano Golden Pro - R$ 149,90");
+				int plano = sc.nextInt(); // Lê o plano escolhido pelo aluno.
+				sc.nextLine(); // Limpa o buffer de entrada.
+
+				System.out.print("Nome: ");
+				String nome = sc.nextLine(); // Lê o nome do aluno.
+
+				// Laço para capturar e validar a data de nascimento até que seja inserida corretamente.
+				do {
+					System.out.print("Data de nascimento (DD-MM-AAAA): ");
+					String datastr = sc.next(); // Lê a data de nascimento como string.
+					try {
+						data = LocalDate.parse(datastr, format); // Converte a string para um objeto LocalDate.
+						validacao = false; // Sinaliza que a data é válida.
+					} catch (DateTimeParseException e) { // Exceção para erro de formatação de data.
+						System.out.println("Formato inválido! Tente usar o formato DD-MM-AAAA.");
+						validacao = true; // Indica que a entrada foi inválida para tentar novamente.
+					}
+				} while (validacao == true); // Repete enquanto a data não for válida.
+
+				System.out.print("Gênero: M) Masculino | F) Feminino ");
+				char sexo = sc.next().charAt(0); // Lê o primeiro caractere para o gênero.
+
+				// Laço para capturar e validar o CPF, garantindo que ele não esteja duplicado.
+				String cpf;
+				do {
+					validacao = false; // Reinicia a flag de validação.
+					System.out.print("CPF (sem espaçamento ou traços): ");
+					cpf = sc.next(); // Lê o CPF.
+					// Percorre a lista para verificar se o CPF já existe.
+					for (Pessoa a : lista) {
+						if (cpf.equals(a.getCpf())) { // Compara o CPF digitado com o CPF de cada pessoa na lista.
+							System.out.println("Este CPF já existe! Tente novamente");
+							validacao = true; // Marca a entrada como inválida caso o CPF já exista.
+							break;
+						}
+					}
+				} while (validacao); // Repete enquanto o CPF já estiver cadastrado.
+
+				System.out.print("Telefone (sem espaçamento ou traços): ");
+				String telefone = sc.next(); // Lê o telefone.
+
+				System.out.print("CEP (sem espaçamento ou traços): ");
+				String cep = sc.next(); // Lê o CEP.
+				sc.nextLine(); // Limpa o buffer de entrada.
+
+				System.out.print("Endereço: ");
+				String endereco = sc.nextLine(); // Lê o endereço.
+
+				// Adiciona um novo objeto Aluno com os dados fornecidos à lista de pessoas.
+				lista.add(new Aluno(nome, cpf, data, sexo, telefone, cep, endereco, plano));
+				System.out.println("CADASTRO REALIZADO COM SUCESSO");
+				break;
+
+			case 2:
+				// Caso 2: Buscar aluno pelo CPF.
+				System.out.println("Digite o CPF para busca: ");
+				String buscacpf = sc.next(); // Lê o CPF para busca.
+				for (Pessoa a : lista) { // Percorre a lista de pessoas.
+					if (buscacpf.equals(a.getCpf())) { // Verifica se o CPF coincide com o CPF de uma pessoa na lista.
+						Aluno a1 = (Aluno) a; // Realiza um casting para acessar métodos específicos da classe Aluno.
+						System.out.println(a1.Dados()); // Exibe os dados do aluno.
+						System.out.println("Plano ativo: " + a1.plano()); // Exibe o plano do aluno.
+						validacao = true; // Indica que o aluno foi encontrado.
+					}
+				}
+				if (validacao == false) { // Exibe mensagem caso o CPF não tenha sido encontrado.
+					System.out.println("CPF não encontrado :/");
+				}
+				break;
+
+			case 3:
+				// Caso 3: Listar todos os alunos.
+				int alunos = 0; // Contador para o número de alunos.
+				System.out.println("Alunos:");
+				for (Pessoa a : lista) { // Percorre a lista de pessoas.
+					System.out.println(a.getNome()); // Exibe o nome de cada pessoa.
+					alunos++; // Incrementa o contador de alunos.
+				}
+				System.out.println("Total: " + alunos + " aluno(s)"); // Exibe o número total de alunos.
+				break;
+
+			case 4:
+				// Caso 4: Alterar o plano de um aluno pelo CPF.
+				System.out.println("Digite o CPF do aluno para alterar seu plano: ");
+				buscacpf = sc.next(); // Lê o CPF do aluno.
+				for (Pessoa a : lista) { // Percorre a lista de pessoas.
+					if (buscacpf.equals(a.getCpf())) { // Verifica se o CPF coincide.
+						System.out.println("Aluno: " + a.getNome());
+						System.out.println(
+								"Selecione o novo plano mensal: \n1)Plano Light - R$ 79,90 | 2)Plano Premium - R$ 99,90 | 3)Plano Golden Pro - R$ 149,90");
+						plano = sc.nextInt(); // Lê o novo plano.
+						Aluno a1 = (Aluno) a; // Realiza o casting para acessar métodos específicos de Aluno.
+						a1.setPlano(plano); // Atualiza o plano do aluno.
+						System.out.println("Plano atualizado com sucesso!");
+						validacao = true; // Indica que a atualização foi feita.
+						break;
+					}
+				}
+				if (validacao == false) { // Exibe mensagem se o CPF não for encontrado.
+					System.out.println("CPF não encontrado :/");
+				}
+				break;
+
+			case 5:
+				// Caso 5: Excluir um aluno pelo CPF.
+				System.out.println("Digite o CPF para excluir: ");
+				buscacpf = sc.next(); // Lê o CPF do aluno a ser excluído.
+				for (Pessoa a : lista) { // Percorre a lista de pessoas.
+					if (buscacpf.equals(a.getCpf())) { // Verifica se o CPF coincide.
+						lista.remove(a); // Remove o aluno da lista.
+						System.out.println("Aluno removido com sucesso!");
+						validacao = true; // Indica que a remoção foi realizada.
+						break;
+					}
+				}
+				if (validacao == false) { // Exibe mensagem caso o CPF não seja encontrado.
+					System.out.println("CPF não encontrado :/");
+				}
+				break;
+
+			case 6:
+				// Caso 6: Encerrar o programa.
+				System.out.println("Obrigado por usar a FitTech, até mais!");
+				break;
+
+			default:
+				// Caso padrão: Exibe mensagem para opção inválida.
+				System.out.println("Opção inválida! Tente novamente");
+				break;
+			}
+		} while (opc != 6); // O loop continua até que a opção sair ser selecionada.
+		
+	}
+	
+}
+
+
+
+============================================================================
+
+
+// A classe Aluno representa um aluno da academia, herda de Pessoa e implementa a interface Plano.
+// Inclui atributos adicionais como data de nascimento, sexo, telefone, CEP, endereço e o plano.
+
+package trabalho;
+
+import java.time.LocalDate; // Importa classe para trabalhar com datas.
+import java.time.format.DateTimeFormatter; // Importa classe para formatar datas.
+
+public class Aluno extends Pessoa implements Plano {
+    private LocalDate data; // Data de nascimento do aluno.
+    private char sexo; // Gênero do aluno (M ou F).
+    private String telefone, cep, endereco; // Informações de contato e localização do aluno.
+    private int Plano; // Código do plano do aluno.
+
+    // Construtor que inicializa todos os atributos da classe Aluno.
+    public Aluno(String nome, String cpf, LocalDate data, char sexo, String telefone, String cep, String endereco,
+                 int Plano) {
+        super(nome, cpf); // Chama o construtor da superclasse Pessoa.
+        this.data = data;
+        this.sexo = sexo;
+        this.telefone = telefone;
+        this.cep = cep;
+        this.endereco = endereco;
+        this.Plano = Plano;
+    }
+
+    // Métodos getters e setters para acessar e modificar os atributos específicos do aluno.
+    public LocalDate getData() {
+        return data;
+    }
+
+    public void setData(LocalDate data) {
+        this.data = data;
+    }
+
+    public char getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(char sexo) {
+        this.sexo = sexo;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public String getCep() {
+        return cep;
+    }
+
+    public void setCep(String cep) {
+        this.cep = cep;
+    }
+
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
+
+    public int getPlano() {
+        return Plano;
+    }
+
+    public void setPlano(int plano) {
+        this.Plano = plano;
+    }
+
+    // Implementação do método Dados da classe abstrata Pessoa.
+    // Retorna uma string com todas as informações do aluno formatadas.
+    @Override
+    public String Dados() {
+        return "FICHA: \nNome: " + nome + "\nData de nascimento: "
+                + data.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) + "\nCPF: " + cpf + "\nSexo: " + sexo
+                + "\nTelefone: " + telefone + "\nCEP: " + cep + "\nEndereço: " + endereco;
+    }
+
+    // Implementação do método plano da interface Plano.
+    // Retorna o nome do plano atual com o valor correspondente.
+    @Override
+    public String plano() {
+        if (Plano == 1) {
+            return "Plano Light (R$ 79,90)";
+        } else if (Plano == 2) {
+            return "Plano Premium (R$ 99,90)";
+        } else {
+            return "Plano Golden Pro (R$ 149,90)";
+        }
+    }
+}
+
+
+================================================================================
+
+
+// Classe abstrata Pessoa representa uma pessoa com atributos comuns.
+// Possui os atributos nome e CPF, métodos getters e setters, e o método abstrato Dados().
+
+package trabalho;
+
+public abstract class Pessoa {
+
+    protected String nome, cpf; // Atributos protegidos para nome e CPF.
+
+    // Construtor que inicializa os atributos nome e CPF.
+    public Pessoa(String nome, String cpf) {
+        this.nome = nome;
+        this.cpf = cpf;
+    }
+
+    // Método para obter o nome da pessoa.
+    public String getNome() {
+        return nome;
+    }
+
+    // Método para alterar o nome da pessoa.
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    // Método para obter o CPF da pessoa.
+    public String getCpf() {
+        return cpf;
+    }
+
+    // Método para alterar o CPF da pessoa.
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    // Método abstrato a ser implementado pelas subclasses para exibir dados específicos da pessoa.
+    public abstract String Dados();
+}
+
+
+
+================================================================================
+
+
+// Interface Plano declara o método plano() para retornar informações do plano de um aluno.
+package trabalho;
+
+public interface Plano {
+    // Método abstrato para retornar o nome e valor do plano.
+    public String plano();
+}
+
+
+
+================================================================================
+
+
+// Classe Professor representa um professor da academia, herda de Pessoa.
+// Implementa o método abstrato Dados, que exibe informações específicas de um professor.
+package trabalho;
+
+public class Professor extends Pessoa {
+
+    // Construtor que recebe nome e CPF e os passa para a superclasse Pessoa.
+    public Professor(String nome, String cpf) {
+        super(nome, cpf); // Chama o construtor da superclasse Pessoa.
+    }
+
+    // Implementação do método abstrato Dados para exibir informações do professor.
+    @Override
+    public String Dados() {
+        return "Professor: " + nome + ", CPF: " + cpf; // Retorna os dados formatados do professor.
+    }
+}
