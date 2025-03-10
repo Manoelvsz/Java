@@ -1,0 +1,189 @@
+package entidade;
+
+public class Produto {
+	private Integer codigo, quantidade;
+	private float preco;
+	private String nome;
+	
+	public Produto(Integer codigo, Integer quantidade, float preco, String nome) {
+		this.codigo = codigo;
+		this.quantidade = quantidade;
+		this.preco = preco;
+		this.nome = nome;
+	}
+	public Produto() {
+	}
+	
+	
+	public Integer getCodigo() {
+		return codigo;
+	}
+	public void setCodigo(Integer codigo) {
+		this.codigo = codigo;
+	}
+	
+	
+	public Integer getQuantidade() {
+		return quantidade;
+	}
+	public void setQuantidade(Integer quantidade) {
+		this.quantidade = quantidade;
+	}
+	
+	
+	public float getPreco() {
+		return preco;
+	}
+	public void setPreco(float preco) {
+		this.preco = preco;
+	}
+	
+	
+	public String getNome() {
+		return nome;
+	}
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+	
+	
+	@Override
+	public String toString() {
+		return "Nome = "+ nome + " - Preço = "+ preco + " - Quantidade = " + quantidade; 
+	}
+}
+
+package entidade2;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import entidade.Produto;
+
+
+public class Loja {
+	private String nome, endereco;
+	List<Produto> produto = new ArrayList<>();
+
+	public Loja(String nome, String endereco) {
+		this.nome = nome;
+		this.endereco = endereco;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getEndereco() {
+		return endereco;
+	}
+
+	public void setEndereco(String endereco) {
+		this.endereco = endereco;
+	}
+	
+	public void addProduto(Produto Addproduto) {
+		produto.add(Addproduto);
+	}
+	
+	public Produto acharMaisCaro() { 
+		Produto maisCaro = produto.get(0);
+		for(Produto x : produto) {
+			if(x.getPreco() > maisCaro.getPreco()) {
+              maisCaro = x;
+			}
+			
+		}
+		
+		return maisCaro;
+	}
+
+	public Produto acharMaisBarato() {
+		Produto maisBarato = produto.get(0);
+		for(Produto x : produto) {
+			if(x.getPreco() < maisBarato.getPreco()) {
+              maisBarato = x;
+			}
+			
+		}
+		
+		return maisBarato;
+	}
+	
+	public float PrecoMedio() {
+		float media = 0;
+		for(Produto x : produto) {
+			media += x.getPreco(); 
+		}
+		return media / produto.size();
+	}
+
+	@Override
+	public String toString() {
+		return "Loja [nome=" + nome + ", endereco=" + endereco + "]";
+	}
+	
+}
+
+package aplicacao;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+import entidade.Produto;
+import entidade2.Loja;
+
+public class Main {
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		String nome, endereco;
+
+		System.out.println("Informe o nome da loja: ");
+		nome = sc.nextLine();
+		System.out.println("Informe o endereço: ");
+		endereco = sc.nextLine();
+
+		Loja loja = new Loja(nome, endereco);
+
+		System.out.println("Informe o numero de produtos: ");
+		int n = sc.nextInt();
+
+		for (int i = 0; i < n; i++) {
+
+			System.out.println("Informe os dados do produto " + (i + 1));
+
+			System.out.println("Codigo: ");
+			Integer codigo = sc.nextInt();
+			sc.nextLine();
+
+			System.out.println("Nome: ");
+			String nomeProduto = sc.nextLine();
+
+			System.out.println("Preço: ");
+			float preco = sc.nextFloat();
+
+			System.out.println("Quantidade: ");
+			Integer quantidade = sc.nextInt();
+
+		    Produto item = new Produto(codigo, quantidade, preco, nomeProduto);
+			loja.addProduto(item);
+		}
+		
+		
+		    System.out.println("Produto mais caro: ");
+			System.out.println(loja.acharMaisCaro());
+			
+			System.out.println("Produto mais barato: ");
+			System.out.println(loja.acharMaisBarato());
+			
+			System.out.println("Média preço: " + loja.PrecoMedio());
+
+		sc.close();
+	}
+
+}
